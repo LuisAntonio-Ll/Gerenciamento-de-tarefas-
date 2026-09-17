@@ -1,0 +1,193 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Gerenciamento de Tarefas",
+    "description": "API RESTful construída com Clean Architecture para gerenciamento de tarefas de usuários.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor local"
+    }
+  ],
+  "paths": {
+    "/tarefas": {
+      "get": {
+        "tags": [
+          "Tarefas"
+        ],
+        "summary": "Lista todas as tarefas cadastradas",
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tarefas"
+        ],
+        "summary": "Cria uma nova tarefa vinculada a um usuário",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Tarefa criada com sucesso, status inicial PENDENTE"
+          },
+          "400": {
+            "description": "Erro de validação (Zod): título ausente ou usuarioId inválido"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "titulo",
+                  "usuarioId"
+                ],
+                "properties": {
+                  "titulo": {
+                    "type": "string",
+                    "example": "Estudar Clean Architecture"
+                  },
+                  "descricao": {
+                    "type": "string",
+                    "example": "Ler sobre camadas e SRP"
+                  },
+                  "usuarioId": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tarefas/{id}": {
+      "put": {
+        "tags": [
+          "Tarefas"
+        ],
+        "summary": "Atualiza o título/descrição de uma tarefa existente",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tarefa atualizada com sucesso"
+          },
+          "404": {
+            "description": "Tarefa não encontrada"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Tarefas"
+        ],
+        "summary": "Exclui uma tarefa do banco de dados",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Tarefa excluída com sucesso"
+          },
+          "404": {
+            "description": "Tarefa não encontrada"
+          }
+        }
+      }
+    },
+    "/tarefas/{id}/iniciar": {
+      "post": {
+        "tags": [
+          "Tarefas"
+        ],
+        "summary": "Inicia uma tarefa (PENDENTE -> EM_ANDAMENTO)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tarefa iniciada com sucesso"
+          },
+          "400": {
+            "description": "Retornado quando o usuário atinge o limite máximo de 5 tarefas com status EM_ANDAMENTO."
+          }
+        }
+      }
+    },
+    "/usuarios": {
+      "post": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Cria um novo usuário",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso"
+          },
+          "400": {
+            "description": "Erro de validação (Zod): nome com menos de 3 letras ou email em formato inválido"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "nome",
+                  "email"
+                ],
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "example": "João"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "joao@teste.com"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
